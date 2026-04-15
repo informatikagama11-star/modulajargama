@@ -40,14 +40,16 @@
                 background: transparent !important; 
                 padding: 0 !important;
                 font-family: 'Times New Roman', Times, serif !important;
+                resize: none !important;
             }
             .p3-item { display: none; }
             .p3-item.active { display: block !important; }
             
-            /* Watermark for print */
             .watermark {
                 display: flex !important;
             }
+
+            .image-upload-btn { display: none !important; }
         }
 
         .f4-paper {
@@ -62,7 +64,6 @@
             overflow: hidden;
         }
 
-        /* Watermark Style */
         .watermark {
             position: absolute;
             top: 50%;
@@ -96,23 +97,30 @@
             padding: 2px 5px;
         }
 
-        .content-area {
-            background-color: #fcfcfc;
-            border: 1px solid #eee;
-            padding: 10px;
-            margin-top: 5px;
+        /* Auto-resize textarea logic */
+        .auto-expand {
+            overflow: hidden;
+            min-height: 1.2em;
         }
 
-        .image-placeholder {
+        .image-container {
             border: 2px dashed #cbd5e1;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
             color: #94a3b8;
-            padding: 20px;
+            padding: 10px;
             margin: 10px 0;
             background-color: #f8fafc;
+            min-height: 150px;
+            position: relative;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 250px;
+            object-fit: contain;
         }
 
         section, div, p, table {
@@ -128,14 +136,15 @@
             <div class="bg-blue-600 p-2 rounded text-xs font-bold">INFO-CODE PRO</div>
             <h1 class="text-lg font-bold">Modul Ajar <span class="text-blue-400">Informatika</span></h1>
         </div>
-        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full font-bold text-sm flex items-center gap-2 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-            Cetak Modul
-        </button>
+        <div class="flex gap-3">
+            <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 px-6 py-2 rounded-full font-bold text-sm flex items-center gap-2 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                Simpan PDF / Cetak
+            </button>
+        </div>
     </nav>
 
     <div id="document-root" class="f4-paper">
-        <!-- Watermark Element -->
         <div class="watermark">SDIT Gema Insan Mandiri</div>
         
         <div class="text-center mb-8">
@@ -151,14 +160,18 @@
             <div class="mb-6 p-4 border-2 border-double border-slate-300 rounded-lg bg-slate-50">
                 <table class="w-full text-[14px]">
                     <tr>
-                        <td class="w-48 py-2 font-bold uppercase">Bab / Judul</td>
-                        <td class="w-4">:</td>
-                        <td><input type="text" class="input-underline w-full font-bold uppercase" value="Bab 1 / Berpikir Komputasional"></td>
+                        <td class="w-48 py-2 font-bold uppercase align-top">Bab / Judul</td>
+                        <td class="w-4 align-top">:</td>
+                        <td>
+                            <textarea oninput="autoHeight(this)" class="auto-expand input-underline w-full font-bold uppercase focus:outline-none bg-transparent" rows="1">Bab 1 / Berpikir Komputasional</textarea>
+                        </td>
                     </tr>
                     <tr>
-                        <td class="py-2 font-bold uppercase">Sub-Judul / Materi</td>
-                        <td>:</td>
-                        <td><input type="text" class="input-underline w-full italic" value="Pengenalan Logika Algoritma Dasar"></td>
+                        <td class="py-2 font-bold uppercase align-top">Sub-Judul / Materi</td>
+                        <td class="align-top">:</td>
+                        <td>
+                            <textarea oninput="autoHeight(this)" class="auto-expand input-underline w-full italic focus:outline-none bg-transparent" rows="1">Pengenalan Logika Algoritma Dasar</textarea>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -183,28 +196,28 @@
                 <div id="p3-container" class="space-y-2">
                     <div id="p3-1" class="p3-item active flex gap-2">
                         <span class="font-bold w-40 flex-shrink-0">● Beriman & Bertakwa:</span>
-                        <textarea class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa memulai kegiatan dengan doa dan menunjukkan sikap menghargai ciptaan Tuhan melalui pemanfaatan teknologi secara bijak.</textarea>
-                        <div class="hidden print:block italic flex-grow">Siswa memulai kegiatan dengan doa dan menunjukkan sikap menghargai ciptaan Tuhan melalui pemanfaatan teknologi secara bijak.</div>
+                        <textarea oninput="autoHeight(this)" class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa memulai kegiatan dengan doa dan menunjukkan sikap menghargai ciptaan Tuhan melalui pemanfaatan teknologi secara bijak.</textarea>
+                        <div class="hidden print:block italic flex-grow"></div>
                     </div>
                     <div id="p3-2" class="p3-item active flex gap-2">
                         <span class="font-bold w-40 flex-shrink-0">● Mandiri:</span>
-                        <textarea class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa secara mandiri mencoba menyusun urutan langkah-langkah (algoritma) dalam menyelesaikan tantangan koding yang diberikan.</textarea>
-                        <div class="hidden print:block italic flex-grow">Siswa secara mandiri mencoba menyusun urutan langkah-langkah (algoritma) dalam menyelesaikan tantangan koding yang diberikan.</div>
+                        <textarea oninput="autoHeight(this)" class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa secara mandiri mencoba menyusun urutan langkah-langkah (algoritma) dalam menyelesaikan tantangan koding yang diberikan.</textarea>
+                        <div class="hidden print:block italic flex-grow"></div>
                     </div>
                     <div id="p3-3" class="p3-item active flex gap-2">
                         <span class="font-bold w-40 flex-shrink-0">● Bernalar Kritis:</span>
-                        <textarea class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa mampu menganalisis kesalahan (debugging) pada urutan instruksi dan mencari solusi yang paling efisien.</textarea>
-                        <div class="hidden print:block italic flex-grow">Siswa mampu menganalisis kesalahan (debugging) pada urutan instruksi dan mencari solusi yang paling efisien.</div>
+                        <textarea oninput="autoHeight(this)" class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa mampu menganalisis kesalahan (debugging) pada urutan instruksi dan mencari solusi yang paling efisien.</textarea>
+                        <div class="hidden print:block italic flex-grow"></div>
                     </div>
                     <div id="p3-4" class="p3-item active flex gap-2">
                         <span class="font-bold w-40 flex-shrink-0">● Gotong Royong:</span>
-                        <textarea class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa bekerja sama dalam tim untuk menyelesaikan proyek kolaboratif membuat alur logika menggunakan kartu instruksi visual.</textarea>
-                        <div class="hidden print:block italic flex-grow">Siswa bekerja sama dalam tim untuk menyelesaikan proyek kolaboratif membuat alur logika menggunakan kartu instruksi visual.</div>
+                        <textarea oninput="autoHeight(this)" class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa bekerja sama dalam tim untuk menyelesaikan proyek kolaboratif membuat alur logika menggunakan kartu instruksi visual.</textarea>
+                        <div class="hidden print:block italic flex-grow"></div>
                     </div>
                     <div id="p3-5" class="p3-item active flex gap-2">
                         <span class="font-bold w-40 flex-shrink-0">● Kreatif:</span>
-                        <textarea class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa mampu menciptakan variasi instruksi baru atau menggabungkan blok koding untuk menghasilkan output yang unik.</textarea>
-                        <div class="hidden print:block italic flex-grow">Siswa mampu menciptakan variasi instruksi baru atau menggabungkan blok koding untuk menghasilkan output yang unik.</div>
+                        <textarea oninput="autoHeight(this)" class="flex-grow focus:outline-none italic text-slate-700 bg-transparent no-print">Siswa mampu menciptakan variasi instruksi baru atau menggabungkan blok koding untuk menghasilkan output yang unik.</textarea>
+                        <div class="hidden print:block italic flex-grow"></div>
                     </div>
                 </div>
             </div>
@@ -234,8 +247,8 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
             <div class="space-y-4 text-[14px]">
                 <div class="border p-3">
                     <p class="font-bold">A. Capaian Pembelajaran:</p>
-                    <div class="print-text italic text-slate-700 whitespace-pre-wrap">Peserta didik mampu memahami instruksi logis, menyusun algoritma sederhana secara runut, dan mengenal lingkungan koding visual untuk menyelesaikan tugas belajar.</div>
-                    <textarea class="no-print w-full focus:outline-none mt-1 h-12">Peserta didik mampu memahami instruksi logis, menyusun algoritma sederhana secara runut, dan mengenal lingkungan koding visual untuk menyelesaikan tugas belajar.</textarea>
+                    <div class="print-text hidden print:block italic text-slate-700 whitespace-pre-wrap"></div>
+                    <textarea oninput="autoHeight(this)" class="no-print w-full focus:outline-none mt-1 min-h-[50px]">Peserta didik mampu memahami instruksi logis, menyusun algoritma sederhana secara runut, dan mengenal lingkungan koding visual untuk menyelesaikan tugas belajar.</textarea>
                 </div>
 
                 <div class="border p-3">
@@ -244,7 +257,7 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
                     <div class="space-y-4">
                         <div class="border p-3">
                             <p class="font-bold">1. Kegiatan Pendahuluan (15 Menit)</p>
-                            <textarea class="w-full focus:outline-none no-print" rows="5">- Guru membuka kelas dengan salam dan doa belajar.
+                            <textarea oninput="autoHeight(this)" class="w-full focus:outline-none no-print" rows="5">- Guru membuka kelas dengan salam dan doa belajar.
 - Guru melakukan presensi dan memberikan motivasi tentang pentingnya koding di masa depan.
 - Apersepsi: Guru menanyakan urutan cara membuat segelas teh atau menyikat gigi sebagai analogi algoritma.
 - Penyampaian tujuan pembelajaran hari ini.</textarea>
@@ -253,7 +266,7 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
 
                         <div class="border p-3">
                             <p class="font-bold">2. Kegiatan Inti (45 Menit)</p>
-                            <textarea class="w-full focus:outline-none no-print" rows="8">- Eksplorasi: Siswa mengamati peragaan guru tentang instruksi langkah-demi-langkah.
+                            <textarea oninput="autoHeight(this)" class="w-full focus:outline-none no-print" rows="8">- Eksplorasi: Siswa mengamati peragaan guru tentang instruksi langkah-demi-langkah.
 - Simulasi Unplugged: Siswa menjadi 'Robot' dan temannya menjadi 'Programmer' yang memberikan instruksi jalan di dalam kelas.
 - Guided Practice: Siswa membuka aplikasi koding visual dan mencoba menyusun blok instruksi sederhana.
 - Kerja Kelompok: Siswa bekerja sama menyelesaikan tantangan algoritma dalam LKPD kelompok.
@@ -263,7 +276,7 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
 
                         <div class="border p-3">
                             <p class="font-bold">3. Kegiatan Penutup (10 Menit)</p>
-                            <textarea class="w-full focus:outline-none no-print" rows="5">- Refleksi: Guru bertanya "Bagian mana yang paling sulit saat menyusun instruksi?"
+                            <textarea oninput="autoHeight(this)" class="w-full focus:outline-none no-print" rows="5">- Refleksi: Guru bertanya "Bagian mana yang paling sulit saat menyusun instruksi?"
 - Guru merangkum pelajaran hari ini tentang pentingnya urutan (sekuensial).
 - Berdoa setelah belajar dan bersyukur atas ilmu yang didapat.
 - Salam penutup.</textarea>
@@ -309,9 +322,13 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
                             <textarea class="w-full focus:outline-none text-[13px] no-print bg-transparent" rows="4">Siswa yang sudah mahir diberikan tantangan koding dengan rintangan yang lebih banyak atau menggunakan blok perulangan (looping) agar kode lebih efisien.</textarea>
                             <div class="hidden print:block text-[13px] italic"></div>
                             
-                            <div class="image-placeholder">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                <span class="text-[10px] text-center">[Gambar Ilustrasi Pengayaan: Tantangan Logika Lanjut]</span>
+                            <div class="image-container" id="container-pengayaan">
+                                <img id="preview-pengayaan" class="preview-img hidden" src="" alt="Pengayaan">
+                                <div id="placeholder-pengayaan" class="flex flex-col items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    <span class="text-[10px] text-center">Tambah Foto Pengayaan</span>
+                                </div>
+                                <input type="file" accept="image/*" class="image-upload-btn absolute inset-0 opacity-0 cursor-pointer" onchange="handleImageUpload(this, 'preview-pengayaan', 'placeholder-pengayaan')">
                             </div>
                         </div>
 
@@ -320,9 +337,13 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
                             <textarea class="w-full focus:outline-none text-[13px] no-print bg-transparent" rows="4">Siswa yang kesulitan diberikan pendampingan satu-lawan-satu untuk menyusun algoritma yang lebih pendek dan sederhana secara manual melalui kartu instruksi fisik.</textarea>
                             <div class="hidden print:block text-[13px] italic"></div>
 
-                            <div class="image-placeholder">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                <span class="text-[10px] text-center">[Gambar Ilustrasi Remedial: Kartu Instruksi Dasar]</span>
+                            <div class="image-container" id="container-remedial">
+                                <img id="preview-remedial" class="preview-img hidden" src="" alt="Remedial">
+                                <div id="placeholder-remedial" class="flex flex-col items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    <span class="text-[10px] text-center">Tambah Foto Remedial</span>
+                                </div>
+                                <input type="file" accept="image/*" class="image-upload-btn absolute inset-0 opacity-0 cursor-pointer" onchange="handleImageUpload(this, 'preview-remedial', 'placeholder-remedial')">
                             </div>
                         </div>
                     </div>
@@ -330,7 +351,7 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
 
                 <div class="border border-dashed border-slate-300 p-4">
                     <p class="font-bold text-center text-slate-400 no-print mb-2 uppercase text-xs">Area Lampiran (Aset Visual / LKPD)</p>
-                    <textarea class="w-full focus:outline-none min-h-[100px] text-[13px]" placeholder="Deskripsikan aset visual atau tempel catatan penting di sini..."></textarea>
+                    <textarea oninput="autoHeight(this)" class="w-full focus:outline-none min-h-[100px] text-[13px]" placeholder="Deskripsikan aset visual atau tempel catatan penting di sini..."></textarea>
                 </div>
             </div>
         </section>
@@ -339,24 +360,51 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
             <div class="grid grid-cols-2 gap-8 text-[14px] text-center">
                 <div class="space-y-24">
                     <div><p>Mengetahui,</p><p class="font-bold">Kepala Sekolah</p></div>
-                    <div><input type="text" class="text-center font-bold w-full uppercase border-none focus:ring-0" value="[NAMA KEPALA SEKOLAH]">
-                    <p>NIY. <input type="text" class="border-none w-48 focus:ring-0 text-center" value="198701010000000000"></p></div>
+                    <div>
+                        <input type="text" class="text-center font-bold w-full border-none focus:ring-0" value="Nama Kepala Sekolah">
+                        <p>NIY. <input type="text" class="border-none w-48 focus:ring-0 text-center" value="198701010000000000"></p>
+                    </div>
                 </div>
                 <div class="space-y-24">
-                    <div><input type="text" class="text-center w-full border-none focus:ring-0" value="Jakarta, 15 April 2026">
-                    <p class="font-bold"><input type="text" class="text-center font-bold w-full border-none focus:ring-0 bg-transparent" value="Guru Informatika"></p></div>
-                    <div><input type="text" class="text-center font-bold w-full uppercase border-none focus:ring-0" value="[NAMA ANDA]">
-                    <p>NIY. <input type="text" class="border-none w-48 focus:ring-0 text-center" value="202401010000000000"></p></div>
+                    <div>
+                        <input type="text" class="text-center w-full border-none focus:ring-0" value="Jakarta, 15 April 2026">
+                        <p class="font-bold"><input type="text" class="text-center font-bold w-full border-none focus:ring-0 bg-transparent" value="Guru Informatika"></p>
+                    </div>
+                    <div>
+                        <input type="text" class="text-center font-bold w-full border-none focus:ring-0" value="Nama Lengkap Anda">
+                        <p>NIY. <input type="text" class="border-none w-48 focus:ring-0 text-center" value="202401010000000000"></p>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
+        // Fungsi untuk membuat textarea tinggi otomatis sesuai konten
+        function autoHeight(element) {
+            element.style.height = "5px";
+            element.style.height = (element.scrollHeight) + "px";
+        }
+
         function toggleP3(id, cb) {
             const el = document.getElementById(id);
             if(cb.checked) el.classList.add('active');
             else el.classList.remove('active');
+        }
+
+        function handleImageUpload(input, imgId, placeholderId) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById(imgId);
+                    const placeholder = document.getElementById(placeholderId);
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
         }
 
         function updatePrintViews() {
@@ -368,16 +416,26 @@ Cara menerapkannya: Guru memberikan sebuah masalah berupa labirin visual di laya
 
             // Update All Textareas to Print Divs
             document.querySelectorAll('textarea').forEach(tarea => {
-                const printDiv = tarea.previousElementSibling;
-                // Hanya update jika elemen sebelumnya adalah div yang ditujukan untuk print
-                if (printDiv && (printDiv.classList.contains('print-text') || printDiv.classList.contains('print:block') || printDiv.tagName === 'DIV')) {
+                const printDiv = tarea.nextElementSibling;
+                // If it's the auto-expand title/subtitle, we need to handle it differently 
+                // but since they remain as textareas in print, CSS handles the border removal.
+                // However, for other sections:
+                if (printDiv && printDiv.tagName === 'DIV' && printDiv.classList.contains('print:block')) {
                     printDiv.innerText = tarea.value;
+                } else if (printDiv && printDiv.classList.contains('hidden')) {
+                     printDiv.innerText = tarea.value;
                 }
             });
+            
+            // Re-trigger autoHeight for all expandable textareas on load
+            document.querySelectorAll('.auto-expand').forEach(el => autoHeight(el));
         }
 
         document.addEventListener('input', updatePrintViews);
-        window.onload = updatePrintViews;
+        window.onload = function() {
+            updatePrintViews();
+            document.querySelectorAll('textarea').forEach(el => autoHeight(el));
+        };
         window.onbeforeprint = updatePrintViews;
     </script>
 </body>
